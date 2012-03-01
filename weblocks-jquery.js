@@ -59,9 +59,9 @@ function stopPropagation(event) {
 // Register global AJAX handlers to show progress
 jQuery(document).ajaxStart(function() {
     try{
-	  jQuery('#ajax-progress')[0].innerHTML = "<img src='/pub/images/progress.gif'>";
+	  jQuery('#ajax-progress').html("<img src='/pub/images/progress.gif'>");
     }catch(e){
-      window.console && console.log(e);
+      window.console && console.log(e, e.message);
     }
 });
 jQuery(document).ajaxStop(function() {
