@@ -197,36 +197,6 @@ if(!window.XMLHttpRequest) {
 	});
 }
 
-// Support suggest control
-function declareSuggest(inputId, choicesId, resultSet, sessionString) {
-    if(resultSet instanceof Array) {
-	new Autocompleter.Local(inputId, choicesId, resultSet, {});
-    } else {
-	new Ajax.Autocompleter(inputId, choicesId, getActionUrl(resultSet, sessionString, true), {});
-    }
-}
-
-function replaceDropdownWithSuggest(ignoreWelcomeMsg, inputId, inputName, choicesId, value) {
-    var dropdownOptions = $(inputId).childElements();
-    var suggestOptions = [];
-    dropdownOptions.each(function(i)
-			 {
-			     if(!(i == dropdownOptions[0] && ignoreWelcomeMsg)) {
-				 suggestOptions.push(i.innerHTML);
-			     }
-			 });
-
-    var inputBox = '<input type="text" id="' + inputId + '" name="' + inputName + '" class="suggest"';
-    if(value) {
-	inputBox += 'value="' + value +'"';
-    }
-    inputBox += '/>';
-
-    var suggestHTML = inputBox + '<div id="' + choicesId + '" class="suggest"></div>';
-    $(inputId).replace(suggestHTML);
-
-    declareSuggest(inputId, choicesId, suggestOptions);
-}
 
 function include_css(css_file) {
   var html_doc = document.getElementsByTagName('head').item(0);
