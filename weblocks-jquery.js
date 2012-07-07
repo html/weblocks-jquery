@@ -272,12 +272,19 @@ function toggleExpandCollapse (heading,container) {
 }
 
 function updateWidgetStateFromHash() {
-  // http://stackoverflow.com/questions/680785/on-window-location-hash-change
-  // TODO need to detect if the hash has been changed but the page hasn't been reloaded
-  // TODO only call this if the hash is actually different from the last recorded hash
-  var hash = window.location.hash;
-  if (hash)
-    initiateActionWithArgs(null, null, {'weblocks-internal-location-hash':hash}, "GET", "/");
+  if(!window.withScripts){
+    throw "Please use javascript library https://github.com/html/jquery-seq and put jquery-bbq into pub/scripts/ to use updateWidgetStateFromHash functionality";
+    return;
+  }
+
+  withScripts("/pub/scripts/jquery.ba-bbq.js", function(){
+    $(window).bind('hashchange', function(event){
+      var hash = window.location.hash;
+      window.console && console.log(hash);
+      if (hash)
+          initiateActionWithArgs(null, null, {'weblocks-internal-location-hash':hash}, "GET", "/");
+    }).trigger('hashchange');
+  });
 }
 
 $ = function(id){
