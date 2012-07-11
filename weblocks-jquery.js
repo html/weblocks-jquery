@@ -199,13 +199,17 @@ if(!window.XMLHttpRequest) {
 
 
 function include_css(css_file) {
-  var html_doc = document.getElementsByTagName('head').item(0);
-  var css = document.createElement('link');
-  css.setAttribute('rel', 'stylesheet');
-  css.setAttribute('type', 'text/css');
-  css.setAttribute('href', css_file);
-  html_doc.appendChild(css);
-  return false;
+  libraryMissingWarning('include_css');
+
+  getFiles([css_file], function(){
+    var html_doc = document.getElementsByTagName('head').item(0);
+    var css = document.createElement('link');
+    css.setAttribute('rel', 'stylesheet');
+    css.setAttribute('type', 'text/css');
+    css.setAttribute('href', css_file);
+    html_doc.appendChild(css);
+    return false;
+  });
 }
 
 function include_dom(script_filename) {
@@ -272,19 +276,22 @@ function toggleExpandCollapse (heading,container) {
 }
 
 function updateWidgetStateFromHash() {
-  if(!window.withScripts){
-    throw "Please use javascript library https://github.com/html/jquery-seq and put jquery-bbq into pub/scripts/ to use updateWidgetStateFromHash functionality";
-    return;
-  }
+  libraryMissingWarning('updateWidgetStateFromHash');
 
   withScripts("/pub/scripts/jquery.ba-bbq.js", function(){
     $(window).bind('hashchange', function(event){
       var hash = window.location.hash;
-      window.console && console.log(hash);
       if (hash)
           initiateActionWithArgs(null, null, {'weblocks-internal-location-hash':hash}, "GET", "/");
     }).trigger('hashchange');
   });
+}
+
+function libraryMissingWarning(feature){
+  if(!window.withScripts){
+    throw "Please use javascript library https://github.com/html/jquery-seq and put jquery-bbq into pub/scripts/ to use " + feature + " functionality";
+    return;
+  }
 }
 
 $ = function(id){
