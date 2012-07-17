@@ -287,6 +287,10 @@ function updateWidgetStateFromHash() {
   });
 }
 
+function setLocationHash (hash) {
+  window.location.hash = hash;
+}
+
 function libraryMissingWarning(feature){
   if(!window.withScripts){
     throw "Please use javascript library https://github.com/html/jquery-seq and put jquery-bbq into pub/scripts/ to use " + feature + " functionality";
