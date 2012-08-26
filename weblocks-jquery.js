@@ -201,15 +201,7 @@ if(!window.XMLHttpRequest) {
 function include_css(css_file) {
   libraryMissingWarning('include_css');
 
-  getFiles([css_file], function(){
-    var html_doc = document.getElementsByTagName('head').item(0);
-    var css = document.createElement('link');
-    css.setAttribute('rel', 'stylesheet');
-    css.setAttribute('type', 'text/css');
-    css.setAttribute('href', css_file);
-    html_doc.appendChild(css);
-    return false;
-  });
+  getStylesNotCached([css_file]);
 }
 
 function include_dom(script_filename) {
