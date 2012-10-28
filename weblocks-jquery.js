@@ -1,5 +1,3 @@
-var debug_with_old_replace_method = false;
-
 // Taken from http://css-tricks.com/snippets/jquery/serialize-form-to-json/
 jQuery.fn.serializeObject = function()
 {
@@ -18,6 +16,14 @@ jQuery.fn.serializeObject = function()
    return o;
 };
 
+jQuery.fn.serializeObjectWithSubmit = function(){
+  var ret = this.serializeObject();
+  var submitElement = jQuery('input[type=submit][clicked=true]');
+  ret[submitElement.attr('name')] = submitElement.val();
+
+  return ret;
+};
+
 // Utilities
 function updateElementBody(element, newBody) {
     element.update(newBody);
@@ -25,6 +31,15 @@ function updateElementBody(element, newBody) {
 
 function updateElement(element, newElement) {
     element.replaceWith(newElement);
+}
+
+function applySubmitClickEvent() {
+  jQuery("form input[type=submit]")
+    .unbind('click.weblocks-submit-event')
+    .bind('click.weblocks-submit-event', function() {
+        $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
+        $(this).attr("clicked", "true");
+    });
 }
 
 function selectionEmpty() {
@@ -87,6 +102,7 @@ function onActionSuccess(json){
   }
 
   execJsonCalls(json['on-load']);
+  applySubmitClickEvent();
 }
 
 function execJsonCalls (calls) {
@@ -108,6 +124,7 @@ function onActionFailure(response) {
 }
 
 function getActionUrl(actionCode, sessionString, isPure) {
+    actionCode = unescape(actionCode);
     if (!sessionString) sessionString = "";
     var scriptName = location.protocol + "//"
                    + location.hostname
@@ -161,7 +178,7 @@ function initiateAction(actionCode, sessionString) {
 
 function initiateFormAction(actionCode, form, sessionString) {
     // Hidden "action" field should not be serialized on AJAX
-    var serializedForm = form.serializeObject();
+    var serializedForm = form.serializeObjectWithSubmit();
     delete(serializedForm['action']);
 
     initiateActionWithArgs(actionCode, sessionString, serializedForm, form.attr('method'));
@@ -297,4 +314,8 @@ $ = function(id){
     return jQuery(id);
   }
 };
+
+jQuery(function(){
+    applySubmitClickEvent();
+});
 
