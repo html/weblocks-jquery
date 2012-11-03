@@ -16,6 +16,12 @@ jQuery.fn.serializeObject = function()
    return o;
 };
 
+jQuery.fn.focusFirstElement = function(){
+  if(jQuery(this).length){
+    jQuery(this).find('input:first').focus();
+  }
+};
+
 jQuery.fn.serializeObjectWithSubmit = function(){
   var ret = this.serializeObject();
   var submitElement = jQuery('input[type=submit][clicked=true]');
