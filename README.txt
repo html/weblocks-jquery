@@ -1,4 +1,4 @@
-This is javascript files which allow to replace prototype-dependent functionality in weblocks with jquery-dependent functionality.
+These are javascript files which allow to replace prototype-dependent functionality in weblocks with jquery-dependent functionality.
 To use it copy jquery files (or link if you use this repository as a submodule) to pub/scripts directory, unload prototype, load jquery and these files.
 Example of loading is following.
 
