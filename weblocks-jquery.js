@@ -19,11 +19,9 @@ jQuery.fn.serializeObject = function()
 /*
  * This prevents javascript error, but does not any effect like with usual weblocks flashes.
  */
-Effect = function(){
-  window.console && console.log(arguments);
-  return {
-    create: function(){}
-  };
+Effect = {
+  Pulsate: function(){},
+  BlindUp: function(){}
 };
 
 /*
