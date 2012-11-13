@@ -16,6 +16,13 @@ jQuery.fn.serializeObject = function()
    return o;
 };
 
+Effect = function(){
+  console.log(arguments);
+  return {
+    create: function(){}
+  };
+};
+
 jQuery.fn.focusFirstElement = function(){
   if(jQuery(this).length){
     jQuery(this).find('input:first').focus();
