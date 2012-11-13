@@ -16,13 +16,19 @@ jQuery.fn.serializeObject = function()
    return o;
 };
 
+/*
+ * This prevents javascript error, but does not any effect like with usual weblocks flashes.
+ */
 Effect = function(){
-  console.log(arguments);
+  window.console && console.log(arguments);
   return {
     create: function(){}
   };
 };
 
+/*
+ * This prevents javascript error and replaces weblocks focusFirstElement form functionality
+ */
 jQuery.fn.focusFirstElement = function(){
   if(jQuery(this).length){
     jQuery(this).find('input:first').focus();
