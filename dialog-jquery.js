@@ -1,3 +1,6 @@
+/*!
+ * Dialog jQuery - dialog helper functions for Weblocks, v0.0.1
+ */
 
 function showDialog(title, body, cssClass){
   if(jQuery('.graybox').length){

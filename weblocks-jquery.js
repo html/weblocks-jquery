@@ -1,3 +1,8 @@
+/*!
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.1
+ * https://github.com/html/weblocks-jquery
+ */
+
 // Taken from http://css-tricks.com/snippets/jquery/serialize-form-to-json/
 jQuery.fn.serializeObject = function()
 {
@@ -19,9 +24,9 @@ jQuery.fn.serializeObject = function()
 /*
  * This prevents javascript error, but does not any effect like with usual weblocks flashes.
  */
-Effect = {
-  Pulsate: function(){},
-  BlindUp: function(){}
+window.Effect = Effect = {
+  Pulsate: function(){ return {};},
+  BlindUp: function(){ return {};}
 };
 
 /*
