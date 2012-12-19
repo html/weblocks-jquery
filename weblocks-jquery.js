@@ -1,5 +1,5 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.1
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.2
  * https://github.com/html/weblocks-jquery
  */
 
@@ -52,7 +52,8 @@ function updateElementBody(element, newBody) {
 }
 
 function updateElement(element, newElement) {
-    element.replaceWith(newElement);
+    var $newElement = jQuery(newElement);
+    element.replaceWith($newElement);
 }
 
 function applySubmitClickEvent() {
@@ -129,8 +130,12 @@ function onActionSuccess(json){
 
 function execJsonCalls (calls) {
   if(calls) {
+    var executedCalls = [];
     jQuery.each(calls, function(i, item){
-      jQuery(item).appendTo('body')
+      if(executedCalls.indexOf(item) == -1){
+        jQuery(item).appendTo('body');
+        executedCalls.push(item);
+      }
     });
   }
 }
