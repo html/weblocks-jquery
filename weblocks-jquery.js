@@ -1,5 +1,5 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.2
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.3
  * https://github.com/html/weblocks-jquery
  */
 
@@ -106,6 +106,31 @@ jQuery(document).ajaxStop(function() {
     jQuery('#ajax-progress').html("");
 });
 
+function dirtyWidgetsToSortedArray(dirtyWidgets){
+  var dirtyWidgetsArray = [];
+  for(var i in dirtyWidgets) {
+    dirtyWidgetsArray.push([i, dirtyWidgets[i]]);
+  }
+
+  dirtyWidgetsArray = dirtyWidgetsArray.sort(function(ar1, ar2){
+      var num1 = +ar1[0].match(/\d+/)[0];
+      var num2 = +ar2[0].match(/\d+/)[0];
+      return num1 > num2 ? 1 : -1;
+  });
+
+  return dirtyWidgetsArray;
+}
+
+function mapEachWidget(dirtyWidgets, fun){
+  jQuery.map(dirtyWidgetsToSortedArray(dirtyWidgets), function(item){
+      var i = item[0], 
+        element = item[1], 
+        widget = jQuery('#' + i);
+
+        fun(element, widget);
+  });
+}
+
 function onActionSuccess(json){
   // See if there are redirects
   var redirect = json['redirect'];
@@ -119,10 +144,9 @@ function onActionSuccess(json){
 
   // Update dirty widgets
   var dirtyWidgets = json['widgets'];
-  for(var i in dirtyWidgets) {
-    var widget = jQuery('#' + i);
-    updateElement(widget, dirtyWidgets[i]);
-  }
+  mapEachWidget(dirtyWidgets, function(element, widget){
+      updateElement(widget, element);
+  });
 
   execJsonCalls(json['on-load']);
   applySubmitClickEvent();
@@ -133,6 +157,7 @@ function execJsonCalls (calls) {
     var executedCalls = [];
     jQuery.each(calls, function(i, item){
       if(executedCalls.indexOf(item) == -1){
+        window.console && console.log(item);
         jQuery(item).appendTo('body');
         executedCalls.push(item);
       }
