@@ -157,7 +157,6 @@ function execJsonCalls (calls) {
     var executedCalls = [];
     jQuery.each(calls, function(i, item){
       if(executedCalls.indexOf(item) == -1){
-        window.console && console.log(item);
         jQuery(item).appendTo('body');
         executedCalls.push(item);
       }
