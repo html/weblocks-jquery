@@ -1,5 +1,5 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.4
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.5
  * https://github.com/html/weblocks-jquery
  */
 
@@ -113,14 +113,18 @@ function dirtyWidgetsToSortedArray(dirtyWidgets){
   }
 
   dirtyWidgetsArray = dirtyWidgetsArray.sort(function(ar1, ar2){
-      if(ar1[0] == 'root'){
+      var match1 = +ar1[0].match(/\d+/);
+      var match2 = +ar2[0].match(/\d+/);
+
+      if(!match1){
         return 1;
-      }else if(ar2[0] == 'root'){
+      }else if(!match2){
         return -1;
       }
 
-      var num1 = +ar1[0].match(/\d+/)[0];
-      var num2 = +ar2[0].match(/\d+/)[0];
+      var num1 = match1[0];
+      var num2 = match2[0];
+
       return num1 > num2 ? 1 : -1;
   });
 
