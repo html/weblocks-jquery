@@ -1,5 +1,5 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.5
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.6
  * https://github.com/html/weblocks-jquery
  */
 
@@ -380,3 +380,11 @@ jQuery(function(){
     applySubmitClickEvent();
 });
 
+
+window.Event.observe = function(obj, evtType, func){
+  if(obj == window && evtType == 'load'){
+    jQuery(func);
+  }else{
+    window.console && console.log("Don't know what to do for " + obj + " and event type " + evtType);
+  }
+};
