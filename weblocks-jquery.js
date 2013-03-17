@@ -1,5 +1,5 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.6
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.7
  * https://github.com/html/weblocks-jquery
  */
 
@@ -348,12 +348,16 @@ function toggleExpandCollapse (heading,container) {
 function updateWidgetStateFromHash() {
   libraryMissingWarning('updateWidgetStateFromHash');
 
-  withScripts("/pub/scripts/jquery.ba-bbq.js", function(){
+  jQuery.getScript("/pub/scripts/jquery.ba-bbq.js", function(){
     $(window).bind('hashchange', function(event){
       var hash = window.location.hash;
       if (hash)
           initiateActionWithArgs(null, null, {'weblocks-internal-location-hash':hash}, "GET", "/");
     }).trigger('hashchange');
+  }).error(function(){
+    if(!jQuery.bbq){
+      window.console && console.log("It seems that jQuery BBQ library is missing, hashchange event will not be dispatched by weblocks");
+    }
   });
 }
 
@@ -363,7 +367,7 @@ function setLocationHash (hash) {
 
 function libraryMissingWarning(feature){
   if(!window.withScripts){
-    throw "Please use javascript library https://github.com/html/jquery-seq and put jquery-bbq into pub/scripts/ to use " + feature + " functionality";
+    window.console && console.log("Please use javascript library https://github.com/html/jquery-seq to use " + feature + " functionality");
     return;
   }
 }
