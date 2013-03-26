@@ -1,5 +1,5 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.7
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.8
  * https://github.com/html/weblocks-jquery
  */
 
@@ -243,6 +243,17 @@ function initiateFormAction(actionCode, form, sessionString) {
     delete(serializedForm['action']);
 
     initiateActionWithArgs(actionCode, sessionString, serializedForm, form.attr('method'));
+}
+
+function initiateFormActionWithCallback(actionCode, form, sessionString, callback) {
+    // Hidden "action" field should not be serialized on AJAX
+    var serializedForm = form.serializeObjectWithSubmit();
+    delete(serializedForm['action']);
+
+    serializedForm.method = form.attr('method');
+    serializedForm.complete = callback;
+
+    initiateActionWithArgsAndCallback(actionCode, sessionString, serializedForm);
 }
 
 function disableIrrelevantButtons(currentButton) {
