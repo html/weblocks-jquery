@@ -1,5 +1,5 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.0.8
+ * Weblocks-jQuery - javascript helper functions for Weblocks v0.1.0
  * https://github.com/html/weblocks-jquery
  */
 
@@ -230,6 +230,26 @@ function initiateActionWithArgsAndCallback(actionCode, sessionString, args){
       error: onActionFailure,
       data: args
   });
+}
+
+var answerDeferred = jQuery.Deferred();
+var answer = null;
+
+function doActionAnswer(newAnswer){
+  answer = newAnswer;
+  answerDeferred.resolve();
+}
+
+function initiateActionWithArgsAndDeferredCallback(actionCode, sessionString, args){
+  var deferredComplete = args['deferred-complete'];
+  delete args['deferred-complete'];
+
+  jQuery.when(answerDeferred).always(function(){
+      deferredComplete(answer);
+      answerDeferred = jQuery.Deferred();
+      answer = null;
+  });
+  return initiateActionWithArgsAndCallback(actionCode, sessionString, args);
 }
 
 /* convenience/compatibility function */
