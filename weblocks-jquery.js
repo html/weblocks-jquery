@@ -1,5 +1,7 @@
 /*!
- * Weblocks-jQuery - javascript helper functions for Weblocks v0.1.0
+ * Weblocks-jQuery - javascript helper functions for Weblocks 
+ * v0.1.1
+ *
  * https://github.com/html/weblocks-jquery
  */
 
@@ -262,6 +264,7 @@ function initiateFormAction(actionCode, form, sessionString) {
     var serializedForm = form.serializeObjectWithSubmit();
     delete(serializedForm['action']);
 
+		serializedForm['form-id'] = form.parents('.widget').attr('id');
     initiateActionWithArgs(actionCode, sessionString, serializedForm, form.attr('method'));
 }
 
