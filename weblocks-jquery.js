@@ -1,6 +1,6 @@
 /*!
  * Weblocks-jQuery - javascript helper functions for Weblocks 
- * v0.1.1
+ * v0.1.2
  *
  * https://github.com/html/weblocks-jquery
  */
@@ -42,8 +42,9 @@ jQuery.fn.focusFirstElement = function(){
 
 jQuery.fn.serializeObjectWithSubmit = function(){
   var ret = this.serializeObject();
-  var submitElement = jQuery('input[type=submit][clicked=true]');
+  var submitElement = jQuery(this).find('input[type=submit][clicked=true]');
   ret[submitElement.attr('name')] = submitElement.val();
+  submitElement.attr('clicked', null);
 
   return ret;
 };
@@ -264,7 +265,7 @@ function initiateFormAction(actionCode, form, sessionString) {
     var serializedForm = form.serializeObjectWithSubmit();
     delete(serializedForm['action']);
 
-		serializedForm['form-id'] = form.parents('.widget').attr('id');
+    serializedForm['form-id'] = form.parents('.widget').attr('id');
     initiateActionWithArgs(actionCode, sessionString, serializedForm, form.attr('method'));
 }
 
