@@ -1,6 +1,6 @@
 /*!
  * Weblocks-jQuery - javascript helper functions for Weblocks 
- * v0.1.2
+ * v0.1.3
  *
  * https://github.com/html/weblocks-jquery
  */
@@ -97,16 +97,24 @@ function stopPropagation(event) {
     };
 }
 
+function startProgress(){
+	  jQuery('#ajax-progress').html("<img src='/pub/images/progress.gif'>");
+}
+
+function stopProgress(){
+    jQuery('#ajax-progress').html("");
+}
+
 // Register global AJAX handlers to show progress
 jQuery(document).ajaxStart(function() {
     try{
-	  jQuery('#ajax-progress').html("<img src='/pub/images/progress.gif'>");
+			startProgress();
     }catch(e){
       window.console && console.log(e, e.message);
     }
 });
 jQuery(document).ajaxStop(function() {
-    jQuery('#ajax-progress').html("");
+		stopProgress();
 });
 
 function dirtyWidgetsToSortedArray(dirtyWidgets){
@@ -205,6 +213,8 @@ function getActionUrl(actionCode, sessionString, isPure) {
 }
 
 function initiateActionWithArgs(actionCode, sessionString, args, method, url) {
+		startProgress();
+
     if (!method) method = 'get';
     if (!url) url = getActionUrl(actionCode, sessionString);
     jQuery.ajax(url, {
@@ -216,6 +226,8 @@ function initiateActionWithArgs(actionCode, sessionString, args, method, url) {
 }
 
 function initiateActionWithArgsAndCallback(actionCode, sessionString, args){
+	startProgress();
+
   var method = args.method || 'get';
   var complete = args.complete;
   var url = args.url || getActionUrl(actionCode, sessionString);
@@ -244,6 +256,8 @@ function doActionAnswer(newAnswer){
 }
 
 function initiateActionWithArgsAndDeferredCallback(actionCode, sessionString, args){
+	startProgress();
+
   var deferredComplete = args['deferred-complete'];
   delete args['deferred-complete'];
 
@@ -265,6 +279,7 @@ function initiateFormAction(actionCode, form, sessionString) {
     var serializedForm = form.serializeObjectWithSubmit();
     delete(serializedForm['action']);
 
+		window.console && console.log(serializedForm);
     serializedForm['form-id'] = form.parents('.widget').attr('id');
     initiateActionWithArgs(actionCode, sessionString, serializedForm, form.attr('method'));
 }
