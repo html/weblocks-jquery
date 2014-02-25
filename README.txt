@@ -17,3 +17,5 @@ Example of loading is following.
   (make-instance 'script-dependency :url "/pub/scripts/dialog-jquery.js")
   (make-instance 'script-dependency :url "/pub/scripts/jquery-seq.js")))   
 
+Repository also contains onAvailable utility function, useful for Weblocks plugisn writing.
+

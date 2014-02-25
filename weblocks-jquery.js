@@ -1,6 +1,6 @@
 /*!
  * Weblocks-jQuery - javascript helper functions for Weblocks 
- * v0.1.4
+ * v0.1.5
  *
  * https://github.com/html/weblocks-jquery
  */
@@ -441,3 +441,29 @@ window.Event.observe = function(obj, evtType, func){
     window.console && console.log("Don't know what to do for " + obj + " and event type " + evtType);
   }
 };
+
+/*
+ * Useful for waiting until element is appeared in html, usage is 
+ * 
+ * // Init code for input loaded with ajax
+ * $('#some-input-should-be-loaded-with-ajax').onAvailable(function(){ 
+ *     console.log("Hey, I'm loaded for 100%, now you don't have bugs with me");
+ * });
+ *
+ */
+jQuery.fn.onAvailable = function(fn){
+    var sel = this.selector;
+    var timer;
+    var self = this;
+    if (this.length > 0) {
+        fn.call(this);   
+    }
+    else {
+        timer = setInterval(function(){
+            if (jQuery(sel).length > 0) {
+                fn.call(jQuery(sel));
+                clearInterval(timer);  
+            }
+        },50);  
+    }
+}
