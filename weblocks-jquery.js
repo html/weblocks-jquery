@@ -8,19 +8,19 @@
 // Taken from http://css-tricks.com/snippets/jquery/serialize-form-to-json/
 jQuery.fn.serializeObject = function()
 {
-   var o = {};
-   var a = this.serializeArray();
-   jQuery.each(a, function() {
-       if (o[this.name]) {
-           if (!o[this.name].push) {
-               o[this.name] = [o[this.name]];
-           }
-           o[this.name].push(this.value || '');
-       } else {
-           o[this.name] = this.value || '';
-       }
-   });
-   return o;
+  var o = {};
+  var a = this.serializeArray();
+  jQuery.each(a, function() {
+    if (o[this.name]) {
+      if (!o[this.name].push) {
+        o[this.name] = [o[this.name]];
+      }
+      o[this.name].push(this.value || '');
+    } else {
+      o[this.name] = this.value || '';
+    }
+  });
+  return o;
 };
 
 /*
@@ -51,70 +51,71 @@ jQuery.fn.serializeObjectWithSubmit = function(){
 
 // Utilities
 function updateElementBody(element, newBody) {
-    element.update(newBody);
+  element.update(newBody);
 }
 
 function updateElement(element, newElement) {
-    var $newElement = jQuery(newElement);
-    element.replaceWith($newElement);
+  var $newElement = jQuery(newElement);
+  element.replaceWith($newElement);
 }
 
 function applySubmitClickEvent() {
   jQuery("form input[type=submit]")
     .unbind('click.weblocks-submit-event')
     .bind('click.weblocks-submit-event', function() {
-        $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
-        $(this).attr("clicked", "true");
+      $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
+      $(this).attr("clicked", "true");
     });
 }
 
 function selectionEmpty() {
-    if(document.getSelection) {
-	return document.getSelection() == "";
-    } else if(document.selection && document.selection.createRange) {
-	return document.selection.createRange().text == "";
-    } else {
-	return true;
-    }
+  if(document.getSelection) {
+    return document.getSelection() == "";
+  } else if(document.selection && document.selection.createRange) {
+    return document.selection.createRange().text == "";
+  } else {
+    return true;
+  }
 }
 
 function addCss(cssCode) {
-    var styleElement = document.createElement("style");
-    styleElement.type = "text/css";
-    if (styleElement.styleSheet) {
-	styleElement.styleSheet.cssText = cssCode;
-    } else {
-	styleElement.appendChild(document.createTextNode(cssCode));
-    }
-    document.getElementsByTagName("head")[0].appendChild(styleElement);
+  var styleElement = document.createElement("style");
+  styleElement.type = "text/css";
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = cssCode;
+  } else {
+    styleElement.appendChild(document.createTextNode(cssCode));
+  }
+  document.getElementsByTagName("head")[0].appendChild(styleElement);
 }
 
 function stopPropagation(event) {
-    if(event.preventDefault) {
-	event.stopPropagation();
-    } else {
-	event.cancelBubble = true;
-    };
+  if(event.preventDefault) {
+    event.stopPropagation();
+  } else {
+    event.cancelBubble = true;
+  };
 }
 
 function startProgress(){
-	  jQuery('#ajax-progress').html("<img src='/pub/images/progress.gif'>");
+  jQuery('#ajax-progress').html("<img src='/pub/images/progress.gif'>");
 }
 
 function stopProgress(){
-    jQuery('#ajax-progress').html("");
+  jQuery('#ajax-progress').html("");
 }
 
 // Register global AJAX handlers to show progress
 jQuery(document).ajaxStart(function() {
-    try{
-			startProgress();
-    }catch(e){
-      window.console && console.log(e, e.message);
-    }
+  try{
+    startProgress();
+  }catch(e){
+    window.console && console.log(e, e.message);
+  }
 });
+
 jQuery(document).ajaxStop(function() {
-		stopProgress();
+  stopProgress();
 });
 
 function dirtyWidgetsToSortedArray(dirtyWidgets){
@@ -124,19 +125,19 @@ function dirtyWidgetsToSortedArray(dirtyWidgets){
   }
 
   dirtyWidgetsArray = dirtyWidgetsArray.sort(function(ar1, ar2){
-      var match1 = +ar1[0].match(/\d+/);
-      var match2 = +ar2[0].match(/\d+/);
+    var match1 = +ar1[0].match(/\d+/);
+    var match2 = +ar2[0].match(/\d+/);
 
-      if(!match1){
-        return 1;
-      }else if(!match2){
-        return -1;
-      }
+    if(!match1){
+      return 1;
+    }else if(!match2){
+      return -1;
+    }
 
-      var num1 = match1[0];
-      var num2 = match2[0];
+    var num1 = match1[0];
+    var num2 = match2[0];
 
-      return num1 > num2 ? 1 : -1;
+    return num1 > num2 ? 1 : -1;
   });
 
   return dirtyWidgetsArray;
@@ -144,11 +145,11 @@ function dirtyWidgetsToSortedArray(dirtyWidgets){
 
 function mapEachWidget(dirtyWidgets, fun){
   jQuery.map(dirtyWidgetsToSortedArray(dirtyWidgets), function(item){
-      var i = item[0], 
-        element = item[1], 
-        widget = jQuery('#' + i);
+    var i = item[0], 
+    element = item[1], 
+    widget = jQuery('#' + i);
 
-        fun(element, widget);
+    fun(element, widget);
   });
 }
 
@@ -166,7 +167,7 @@ function onActionSuccess(json){
   // Update dirty widgets
   var dirtyWidgets = json['widgets'];
   mapEachWidget(dirtyWidgets, function(element, widget){
-      updateElement(widget, element);
+    updateElement(widget, element);
   });
 
   execJsonCalls(json['on-load']);
@@ -188,7 +189,7 @@ function execJsonCalls (calls) {
 function onActionFailure(response) {
   window.temp = window.open();
   try{
-  window.temp.document.write(response.responseText);
+    window.temp.document.write(response.responseText);
     alert('Oops, we could not complete your request because of an internal error.');
   }catch(e){
     window.console && console.log(e, e.toString());
@@ -196,37 +197,37 @@ function onActionFailure(response) {
 }
 
 function getActionUrl(actionCode, sessionString, isPure) {
-    actionCode = unescape(actionCode);
-    if (!sessionString) sessionString = "";
-    var scriptName = location.protocol + "//"
-                   + location.hostname
-                   + (location.port ? ":" + location.port : "")
-                   + location.pathname;
-    var query = location.search;
-    var url = scriptName + query + (query ? "&" : "?")
-      + sessionString + (sessionString ? "&" : "") + "action=" + actionCode;
+  actionCode = unescape(actionCode);
+  if (!sessionString) sessionString = "";
+  var scriptName = location.protocol + "//"
+    + location.hostname
+    + (location.port ? ":" + location.port : "")
+    + location.pathname;
+  var query = location.search;
+  var url = scriptName + query + (query ? "&" : "?")
+    + sessionString + (sessionString ? "&" : "") + "action=" + actionCode;
 
-    if(isPure)
-      url += '&pure=true';
+  if(isPure)
+    url += '&pure=true';
 
-    return url;
+  return url;
 }
 
 function initiateActionWithArgs(actionCode, sessionString, args, method, url) {
-		startProgress();
+  startProgress();
 
-    if (!method) method = 'get';
-    if (!url) url = getActionUrl(actionCode, sessionString);
-    jQuery.ajax(url, {
-        type: method,
-        success: onActionSuccess,
-        error: onActionFailure,
-        data: args
-    });
+  if (!method) method = 'get';
+  if (!url) url = getActionUrl(actionCode, sessionString);
+  jQuery.ajax(url, {
+    type: method,
+    success: onActionSuccess,
+    error: onActionFailure,
+    data: args
+  });
 }
 
 function initiateActionWithArgsAndCallback(actionCode, sessionString, args){
-	startProgress();
+  startProgress();
 
   var method = args.method || 'get';
   var complete = args.complete;
@@ -237,13 +238,13 @@ function initiateActionWithArgsAndCallback(actionCode, sessionString, args){
   args.action = actionCode;
 
   jQuery.ajax(args.url, {
-      type: method,
-      success: function(first, second, third){ 
-        onActionSuccess(first, second, third);
-        complete && complete();
-      },
-      error: onActionFailure,
-      data: args
+    type: method,
+    success: function(first, second, third){ 
+      onActionSuccess(first, second, third);
+      complete && complete();
+    },
+    error: onActionFailure,
+    data: args
   });
 }
 
@@ -256,72 +257,72 @@ function doActionAnswer(newAnswer){
 }
 
 function initiateActionWithArgsAndDeferredCallback(actionCode, sessionString, args){
-	startProgress();
+  startProgress();
 
   var deferredComplete = args['deferred-complete'];
   delete args['deferred-complete'];
 
   jQuery.when(answerDeferred).always(function(){
-      deferredComplete(answer);
-      answerDeferred = jQuery.Deferred();
-      answer = null;
+    deferredComplete(answer);
+    answerDeferred = jQuery.Deferred();
+    answer = null;
   });
   return initiateActionWithArgsAndCallback(actionCode, sessionString, args);
 }
 
 /* convenience/compatibility function */
 function initiateAction(actionCode, sessionString) {
-    initiateActionWithArgs(actionCode, sessionString);
+  initiateActionWithArgs(actionCode, sessionString);
 }
 
 function initiateFormAction(actionCode, form, sessionString) {
-    // Hidden "action" field should not be serialized on AJAX
-    var serializedForm = form.serializeObjectWithSubmit();
-    delete(serializedForm['action']);
+  // Hidden "action" field should not be serialized on AJAX
+  var serializedForm = form.serializeObjectWithSubmit();
+  delete(serializedForm['action']);
 
-    serializedForm['form-id'] = form.parents('.widget').attr('id');
-    initiateActionWithArgs(actionCode, sessionString, serializedForm, form.attr('method'));
+  serializedForm['form-id'] = form.parents('.widget').attr('id');
+  initiateActionWithArgs(actionCode, sessionString, serializedForm, form.attr('method'));
 }
 
 function initiateFormActionWithCallback(actionCode, form, sessionString, callback) {
-    // Hidden "action" field should not be serialized on AJAX
-    var serializedForm = form.serializeObjectWithSubmit();
-    delete(serializedForm['action']);
+  // Hidden "action" field should not be serialized on AJAX
+  var serializedForm = form.serializeObjectWithSubmit();
+  delete(serializedForm['action']);
 
-    serializedForm.method = form.attr('method');
-    serializedForm.complete = callback;
+  serializedForm.method = form.attr('method');
+  serializedForm.complete = callback;
 
-    initiateActionWithArgsAndCallback(actionCode, sessionString, serializedForm);
+  initiateActionWithArgsAndCallback(actionCode, sessionString, serializedForm);
 }
 
 function disableIrrelevantButtons(currentButton) {
-    $(currentButton).parents('form').find('submit').attr('disabled', true);
-    $(currentButton).attr('disabled', false);
+  $(currentButton).parents('form').find('submit').attr('disabled', true);
+  $(currentButton).attr('disabled', false);
 }
 
 // Fix IE6 flickering issue
 if(jQuery.browser.msie) {
-    try {
-	document.execCommand("BackgroundImageCache", false, true);
-    } catch(err) {}
+  try {
+    document.execCommand("BackgroundImageCache", false, true);
+  } catch(err) {}
 }
 
 // Table hovering for IE (can't use CSS expressions because
 // Event.observe isn't available there and we can't overwrite events
 // using assignment
 if(!window.XMLHttpRequest) {
-    // IE6 only
-    Event.observe(window, 'load', function() {
-	    var tableRows = $$('.table table tbody tr');
-	    tableRows.each(function(row) {
-		    Event.observe(row, 'mouseover', function() {
-			    row.addClassName('hover');
-			});
-		    Event.observe(row, 'mouseout', function() {
-			    row.removeClassName('hover');
-			});
-		});
-	});
+  // IE6 only
+  Event.observe(window, 'load', function() {
+    var tableRows = $$('.table table tbody tr');
+    tableRows.each(function(row) {
+      Event.observe(row, 'mouseover', function() {
+        row.addClassName('hover');
+      });
+      Event.observe(row, 'mouseout', function() {
+        row.removeClassName('hover');
+      });
+    });
+  });
 }
 
 
@@ -430,7 +431,7 @@ $ = function(id){
 };
 
 jQuery(function(){
-    applySubmitClickEvent();
+  applySubmitClickEvent();
 });
 
 
@@ -452,18 +453,18 @@ window.Event.observe = function(obj, evtType, func){
  *
  */
 jQuery.fn.onAvailable = function(fn){
-    var sel = this.selector;
-    var timer;
-    var self = this;
-    if (this.length > 0) {
-        fn.call(this);   
-    }
-    else {
-        timer = setInterval(function(){
-            if (jQuery(sel).length > 0) {
-                fn.call(jQuery(sel));
-                clearInterval(timer);  
-            }
-        },50);  
-    }
+  var sel = this.selector;
+  var timer;
+  var self = this;
+  if (this.length > 0) {
+    fn.call(this);   
+  }
+  else {
+    timer = setInterval(function(){
+      if (jQuery(sel).length > 0) {
+        fn.call(jQuery(sel));
+        clearInterval(timer);  
+      }
+    },50);  
+  }
 }
