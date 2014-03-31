@@ -1,6 +1,6 @@
 /*!
  * Weblocks-jQuery - javascript helper functions for Weblocks 
- * v0.1.5
+ * v0.2.0
  *
  * https://github.com/html/weblocks-jquery
  */
@@ -118,39 +118,99 @@ jQuery(document).ajaxStop(function() {
   stopProgress();
 });
 
-function dirtyWidgetsToSortedArray(dirtyWidgets){
-  var dirtyWidgetsArray = [];
-  for(var i in dirtyWidgets) {
-    dirtyWidgetsArray.push([i, dirtyWidgets[i]]);
-  }
-
-  dirtyWidgetsArray = dirtyWidgetsArray.sort(function(ar1, ar2){
-    var match1 = +ar1[0].match(/\d+/);
-    var match2 = +ar2[0].match(/\d+/);
-
-    if(!match1){
-      return 1;
-    }else if(!match2){
-      return -1;
+Object.values = function (obj) {
+  var vals = [];
+  for( var key in obj ) {
+    if ( obj.hasOwnProperty(key) ) {
+      vals.push(obj[key]);
     }
-
-    var num1 = match1[0];
-    var num2 = match2[0];
-
-    return num1 > num2 ? 1 : -1;
-  });
-
-  return dirtyWidgetsArray;
+  }
+  return vals;
 }
 
-function mapEachWidget(dirtyWidgets, fun){
-  jQuery.map(dirtyWidgetsToSortedArray(dirtyWidgets), function(item){
-    var i = item[0], 
-    element = item[1], 
-    widget = jQuery('#' + i);
+function dumpTree(tree, deepness){
+  if(!deepness){
+    deepness = 1;
+  }
+  var prefix = '';
+  for(var i=0;i<deepness;i++){
+    prefix += ' ';
+  }
 
-    fun(element, widget);
-  });
+  if(tree.children){
+    for(var i=0;i<tree.children.length;i++){
+      window.console && console.log(prefix + tree.children[i].id);
+      dumpTree(tree.children[i], deepness + 1);
+    }
+  }
+}
+
+function widgetsJsonToTree(json){
+  var widgetsTree = {
+  };
+
+  for(var i in json){
+    widgetsTree[i] = {
+      'id': i,
+      'widget': jQuery(json[i]),
+      'children': []
+    };
+  }
+
+  var idsToDelete = [];
+
+  for(var i in widgetsTree){
+    var ids = jQuery('[id]', widgetsTree[i].widget).map(function(){
+      return jQuery(this).attr('id');
+    });
+
+    var children = [];
+    ids.map(function(key, id){
+      if(widgetsTree[id]){
+        children.push(widgetsTree[id]);
+        idsToDelete.push(id);
+      }
+    });
+
+    var exceptIds = [];
+
+    for(var k in children){
+      for(var l in children){
+        if(k != l 
+            && exceptIds.indexOf(children[l].id) == -1 
+            && children[k].widget.find('#' + children[l].id).length){
+              /*
+          window.console && console.log(children[l].id, ' is child of ', children[k].id, 
+            children[k].widget.find('#' + children[l].id)
+          );*/
+          exceptIds.push(children[l].id);
+        }
+      }
+    }
+
+    for(var k=0;k<children.length;k++){
+      if(exceptIds.indexOf(children[k].id) == -1){
+        widgetsTree[i].children.push(children[k]);
+      }
+    }
+  }
+
+  for(var i=0;i<idsToDelete.length;i++){
+    delete widgetsTree[idsToDelete[i]];
+  }
+
+  //dumpTree({ children: Object.values(widgetsTree) });
+  return widgetsTree.root ? widgetsTree.root : { children: Object.values(widgetsTree) };
+}
+
+function updateElementForTree(tree){
+  if(tree.children){
+    tree.children.map(updateElementForTree);
+  }
+
+  if(tree.id){
+    jQuery('#' + tree.id).replaceWith(tree.widget);
+  }
 }
 
 function onActionSuccess(json){
@@ -166,9 +226,9 @@ function onActionSuccess(json){
 
   // Update dirty widgets
   var dirtyWidgets = json['widgets'];
-  mapEachWidget(dirtyWidgets, function(element, widget){
-    updateElement(widget, element);
-  });
+
+  updateElementForTree(widgetsJsonToTree(dirtyWidgets));
+
 
   execJsonCalls(json['on-load']);
   applySubmitClickEvent();
